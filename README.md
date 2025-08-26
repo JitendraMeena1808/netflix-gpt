@@ -4,8 +4,19 @@
 -Create React App
 -Configured TailwindCSS
 -Header
+-routing
 -Login Form
 -Sign Up Form
+-Form Validation
+-useRef Hook
+-Firebase setup
+-Deploying our project on production
+-Create Sign Up User Account 
+-Implement Sign in user Api
+-Created RTK
+-Implemented Sign Out 
+-Update Profile Api call 
+-Fetch Movies from TMDB
 
 
 
