@@ -6,16 +6,14 @@ import {
   signInWithEmailAndPassword,
   updateProfile
 } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
+import { userdefultprofile } from "../utils/constant";
 
 
 const Login = () => {
   const [isSignInForm, setisSignInForm] = useState(true);
   const [error, setError] = useState("");
-
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const email = useRef(null);
@@ -38,7 +36,6 @@ const Login = () => {
           // Login me updateProfile ki zarurat nahi
           const { uid, email, displayName, photoURL } = user;
           dispatch(addUser({ uid, email, displayName, photoURL }));
-          navigate("/Browse");
           alert("Login successful!");
 
         } else {
@@ -49,7 +46,7 @@ const Login = () => {
           // Ab profile update karna hoga
           await updateProfile(user, {
             displayName: name.current.value,
-            photoURL: "https://cdn-icons-png.flaticon.com/512/149/149071.png" // default profile image
+            photoURL:userdefultprofile // default profile image
           });
 
           console.log("Profile updated successfully!");
@@ -59,14 +56,14 @@ const Login = () => {
           dispatch(addUser({ uid, email, displayName, photoURL }));
 
           alert("Account created successfully!");
-          navigate("/Browse");
+         
         }
       } catch (err) {
         setError(err.message);
       }
     } else {
       setError("Email/Password field is empty!");
-      navigate("/");
+      
     }
   };
 

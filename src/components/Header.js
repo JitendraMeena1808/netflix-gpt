@@ -1,11 +1,15 @@
-import { signOut } from "firebase/auth";
+import { signOut , onAuthStateChanged } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../utils/firebase";  // firebase.js se auth import
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FaUserCircle } from "react-icons/fa";  // fallback icon
+import { useEffect } from "react";
+import { addUser , removeUser } from "../utils/userSlice";
+import { netflix_logo } from "../utils/constant";
 
 const Header = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
 
   const handleSignOut = () => {
@@ -18,13 +22,31 @@ const Header = () => {
         console.error("Sign out error:", error);
         navigate("/error");
       });
-  };
+    };
+
+        useEffect(()=>{
+  const unsubscribe = onAuthStateChanged(auth, (user) => {
+  if (user) {
+    const{uid,email,displayName , photoURL} = user;
+    dispatch(addUser({uid:uid , email:email, displayName:displayName , photoURL:photoURL}));
+    navigate("/Browse");
+  } else {
+    // ❌ User logout ho gaya
+    dispatch(removeUser());
+    console.log("No user is signed in");
+    navigate("/")
+  }
+});
+    // unsubscribe when component unmounts
+    return ()=> unsubscribe();
+
+  },[]);
 
   return (
     <div className="w-screen absolute top-0 left-0 flex justify-between items-center px-12 py-6 z-20">
       {/* Netflix Logo */}
       <img
-        src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"
+        src={netflix_logo}
         alt="logo"
         className="w-32 cursor-pointer"
       />
